@@ -13,29 +13,31 @@ public class Main {
             "SF-11-11-KV",
             FlightEntity.ARRIVAL,
             "San Francisco",
-            "Kyiv", LocalDateTime.now(),
+            "Kyiv",
+            LocalDateTime.now(),
             LocalDateTime.now().plusHours(4));
 
     static FlightEntity KV_SF = new FlightEntity(
             4,
             "KV-7777-SF",
-            FlightEntity.ARRIVAL,
+            FlightEntity.LEAVING,
             "Kyiv",
-            "San Francisco", LocalDateTime.now(),
-            LocalDateTime.now().plusHours(6)
-    );
+            "San Francisco",
+            LocalDateTime.now(),
+            LocalDateTime.now().plusHours(6));
+
 
     public static void main(String[] args) throws SQLException {
         DbConnector dbConnector = DbConnector.getINSTANCE();
         Connection connection = dbConnector.getConnection();
-        System.out.println(connection == null ?
-                "NO CONNECTION !" : "CONNECTION SUCCESS !");
+        System.out.println(connection == null ? "NO CONNECTION !" : "CONNECTION SUCCESS !\n");
+
         FlightRepository flightRepository = new FlightRepository(connection);
 
 // CREATE>
-        //flightRepository.add(new FlightEntity());
-        //flightRepository.add(SF_KV);
-        //flightRepository.add(KV_SF);
+        // flightRepository.add(new FlightEntity());
+        // flightRepository.add(SF_KV);
+        // flightRepository.add(KV_SF);
 
 // READ>
         List<FlightEntity> all = flightRepository.getAll();
@@ -45,7 +47,6 @@ public class Main {
         // SF_KV.setLeavingFrom("Lviv");
         // SF_KV.setArrivalTo("Ierusalem");
         // flightRepository.update(SF_KV);
-
 
 // DELETE>
         //flightRepository.remove(1);

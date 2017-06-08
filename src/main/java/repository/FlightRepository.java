@@ -15,24 +15,24 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void add(FlightEntity entity) throws SQLException {
-        FlightEntity flightEntityEntity = (FlightEntity) entity;
+    public void add(FlightEntity flightEntity) throws SQLException {
 
-        if (flightEntityEntity.isEmptyEntity()) {
-            connection.createStatement().execute("INSERT INTO flight() VALUEs()"); // FOR DEFAULT VALUES
+        if (flightEntity.isEmptyEntity()) {
+            connection.createStatement().execute("INSERT INTO flight() VALUES()"); // FOR DEFAULT VALUES
             return;
         }
 
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO flight (flight_number, direction_type, leaving_from, arrival_to, leaving_time, arrival_time) VALUES(?, ?, ?, ?, ?, ?);");
-        preparedStatement.setString(1, flightEntityEntity.getFlightNumber());
-        preparedStatement.setBoolean(2, flightEntityEntity.getDirectionType());
 
-        preparedStatement.setString(3, flightEntityEntity.getLeavingFrom());
-        preparedStatement.setString(4, flightEntityEntity.getArrivalTo());
+        preparedStatement.setString(1, flightEntity.getFlightNumber());
+        preparedStatement.setBoolean(2, flightEntity.getDirectionType());
 
-        preparedStatement.setTimestamp(5, Timestamp.valueOf(flightEntityEntity.getLeavingTime()));
-        preparedStatement.setTimestamp(6, Timestamp.valueOf(flightEntityEntity.getArrivalTime()));
+        preparedStatement.setString(3, flightEntity.getLeavingFrom());
+        preparedStatement.setString(4, flightEntity.getArrivalTo());
+
+        preparedStatement.setTimestamp(5, Timestamp.valueOf(flightEntity.getLeavingTime()));
+        preparedStatement.setTimestamp(6, Timestamp.valueOf(flightEntity.getArrivalTime()));
 
         preparedStatement.execute();
     }
@@ -48,11 +48,10 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void update(FlightEntity entity) throws SQLException {
-        FlightEntity flightEntity = (FlightEntity) entity;
+    public void update(FlightEntity flightEntity) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE flight SET flight_number = ?, direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time =?, arrival_time =? WHERE id = ?;");
+                "UPDATE flight SET flight_number = ?, direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE id = ?;");
         preparedStatement.setString(1, flightEntity.getFlightNumber());
         preparedStatement.setBoolean(2, flightEntity.getDirectionType());
 
@@ -72,6 +71,7 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
         Statement statement = this.connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM flight;");
         List<FlightEntity> entitiesList = new ArrayList<>();
+
         while (resultSet.next()) {
             FlightEntity flightEntity = new FlightEntity();
 

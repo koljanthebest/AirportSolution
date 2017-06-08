@@ -94,13 +94,13 @@ public class FlightEntity {  // POJO
     @Override
     public String toString() {
         return
-                "\nID=" + ID +
-                        ", flightNumber='" + flightNumber +
-                        "\ndirectionType=" + directionType +
-                        "\nleavingFrom='" + leavingFrom +
-                        "\narrivalTo='" + arrivalTo +
-                        "\nleavingTime=" + leavingTime +
-                        "\narrivalTime=" + arrivalTime +
+                "\nID = " + ID +
+                        ", flightNumber = " + flightNumber +
+                        "\ndirectionType = " + directionType +
+                        "\nleavingFrom = " + leavingFrom +
+                        "\narrivalTo = " + arrivalTo +
+                        "\nleavingTime = " + leavingTime +
+                        "\narrivalTime = " + arrivalTime +
                         "\n";
     }
 }

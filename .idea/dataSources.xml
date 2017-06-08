@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="airportDB@localhost" uuid="21031813-8bab-4f59-a469-7cd054905680">
+    <data-source source="LOCAL" name="airport@localhost" uuid="cb1d1cdb-6f57-446b-9936-c1f803536769">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/airportDB</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/airport</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />
