@@ -14,8 +14,8 @@ public class Main {
             FlightEntity.ARRIVAL,
             "San Francisco",
             "Kyiv",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusHours(4));
+            LocalDateTime.now().plusHours(1),
+            LocalDateTime.now().plusDays(12));
 
     static FlightEntity KV_SF = new FlightEntity(
             4,
@@ -23,8 +23,8 @@ public class Main {
             FlightEntity.LEAVING,
             "Kyiv",
             "San Francisco",
-            LocalDateTime.now(),
-            LocalDateTime.now().plusHours(6));
+            LocalDateTime.now().plusHours(6).plusMinutes(10),
+            LocalDateTime.now().plusDays(1));
 
 
     public static void main(String[] args) throws SQLException {
@@ -35,9 +35,9 @@ public class Main {
         FlightRepository flightRepository = new FlightRepository(connection);
 
 // CREATE>
-        // flightRepository.add(new FlightEntity());
-        // flightRepository.add(SF_KV);
-        // flightRepository.add(KV_SF);
+        flightRepository.add(new FlightEntity());
+        flightRepository.add(SF_KV);
+        flightRepository.add(KV_SF);
 
 // READ>
         List<FlightEntity> all = flightRepository.getAll();
