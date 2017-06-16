@@ -3,9 +3,10 @@ package repository;
 import entities.FlightEntity;
 
 import java.sql.*;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class FlightRepository implements RepositoryInterface<FlightEntity> {
     private Connection connection;
@@ -17,11 +18,6 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     @Override
     public void add(FlightEntity flightEntity) throws SQLException {
 
-        if (flightEntity.isEmptyEntity()) {
-            connection.createStatement().execute("INSERT INTO flight() VALUES()"); // FOR DEFAULT VALUES
-            return;
-        }
-
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO flight (flight_number, direction_type, leaving_from, arrival_to, leaving_time, arrival_time) VALUES(?, ?, ?, ?, ?, ?);");
 
@@ -31,8 +27,8 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
         preparedStatement.setString(3, flightEntity.getLeavingFrom());
         preparedStatement.setString(4, flightEntity.getArrivalTo());
 
-        preparedStatement.setTimestamp(5, Timestamp.valueOf(flightEntity.getLeavingTime()));
-        preparedStatement.setTimestamp(6, Timestamp.valueOf(flightEntity.getArrivalTime()));
+        preparedStatement.setTime(5, Time.valueOf(flightEntity.getLeavingTime().truncatedTo(ChronoUnit.MINUTES)));
+        preparedStatement.setTime(6, Time.valueOf(flightEntity.getArrivalTime().truncatedTo(ChronoUnit.MINUTES)));
 
         preparedStatement.execute();
     }
@@ -41,8 +37,8 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     public void remove(FlightEntity entity) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "DELETE FROM flight WHERE id = ?;");
-        preparedStatement.setInt(1, entity.getID());
+                "DELETE FROM flight WHERE flight_number = ?;");
+        preparedStatement.setString(1, entity.getFlightNumber());
 
         preparedStatement.execute();
     }
@@ -51,41 +47,41 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     public void update(FlightEntity flightEntity) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE flight SET flight_number = ?, direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE id = ?;");
-        preparedStatement.setString(1, flightEntity.getFlightNumber());
-        preparedStatement.setBoolean(2, flightEntity.getDirectionType());
+                "UPDATE flight SET direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE flight_number = ?;");
+        preparedStatement.setBoolean(1, flightEntity.getDirectionType());
 
-        preparedStatement.setString(3, flightEntity.getLeavingFrom());
-        preparedStatement.setString(4, flightEntity.getArrivalTo());
+        preparedStatement.setString(2, flightEntity.getLeavingFrom());
+        preparedStatement.setString(3, flightEntity.getArrivalTo());
 
-        preparedStatement.setTimestamp(5, Timestamp.valueOf(flightEntity.getLeavingTime()));
-        preparedStatement.setTimestamp(6, Timestamp.valueOf(flightEntity.getArrivalTime()));
+        preparedStatement.setTime(4, Time.valueOf(flightEntity.getLeavingTime().truncatedTo(ChronoUnit.MINUTES)));
+        preparedStatement.setTime(5, Time.valueOf(flightEntity.getArrivalTime().truncatedTo(ChronoUnit.MINUTES)));
 
-        preparedStatement.setInt(7, flightEntity.getID());
+        preparedStatement.setString(6, flightEntity.getFlightNumber());
 
         preparedStatement.execute();
     }
 
     @Override
-    public List<FlightEntity> getAll() throws SQLException {
-        Statement statement = this.connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM flight;");
-        List<FlightEntity> entitiesList = new ArrayList<>();
+    public List<FlightEntity> getAll() {
+        try (Statement statement = this.connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM flight;")) {
+            List<FlightEntity> entitiesList = new ArrayList<>();
 
-        while (resultSet.next()) {
-            FlightEntity flightEntity = new FlightEntity();
+            while (resultSet.next()) {
 
-            flightEntity.setID(resultSet.getInt("id"));
-            flightEntity.setFlightNumber(resultSet.getString("flight_number"));
-            flightEntity.setDirectionType(resultSet.getBoolean("direction_type"));
+                String flightNumber = resultSet.getString("flight_number");
+                boolean directionType = resultSet.getBoolean("direction_type");
+                String leavingFrom = resultSet.getString("leaving_from");
+                String arrivalTo = resultSet.getString("arrival_to");
+                LocalTime leavingTime = resultSet.getTime("leaving_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
+                LocalTime arrivalTime = resultSet.getTime("arrival_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
 
-            flightEntity.setLeavingFrom(resultSet.getString("leaving_from"));
-            flightEntity.setArrivalTo(resultSet.getString("arrival_to"));
-
-            flightEntity.setLeavingTime(resultSet.getTimestamp("leaving_time").toLocalDateTime());
-            flightEntity.setArrivalTime(resultSet.getTimestamp("arrival_time").toLocalDateTime());
-            entitiesList.add(flightEntity);
+                FlightEntity flightEntity = new FlightEntity(flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
+                entitiesList.add(flightEntity);
+            }
+            return entitiesList;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return entitiesList;
     }
 }

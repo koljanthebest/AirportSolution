@@ -1,101 +1,70 @@
 package entities;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.util.concurrent.TimeUnit;
 
 public class FlightEntity {  // POJO
-    private Integer ID;
-    private String flightNumber;
-    private boolean directionType;
-    private String leavingFrom;
-    private String arrivalTo;
-    private LocalDateTime leavingTime;
-    private LocalDateTime arrivalTime;
+    // private Integer ID;
+    final private String flightNumber;
+    final private boolean directionType;
+    final private String leavingFrom;
+    final private String arrivalTo;
+    final private LocalTime leavingTime;
+    final private LocalTime arrivalTime;
     public static final boolean LEAVING = false, ARRIVAL = true;
 
-    public FlightEntity() {
-    }
-
-    public FlightEntity(Integer id,
+    public FlightEntity(/*Integer id,*/
                         String flightNumber,
                         boolean directionType,
                         String leavingFrom,
                         String arrivalTo,
-                        LocalDateTime arrivalTime,
-                        LocalDateTime leavingTime) {
-        this.ID = id;
+                        LocalTime arrivalTime,
+                        LocalTime leavingTime) {
+        //this.ID = id;
         this.flightNumber = flightNumber;
+        this.directionType = directionType;
+
         this.leavingFrom = leavingFrom;
         this.arrivalTo = arrivalTo;
-        this.arrivalTime = arrivalTime;
-        this.leavingTime = leavingTime;
-        this.directionType = directionType;
-    }
 
-    public Integer getID() {
-        return ID;
-    }
+        this.arrivalTime = arrivalTime.truncatedTo(ChronoUnit.MINUTES);
+        this.leavingTime = leavingTime.truncatedTo(ChronoUnit.MINUTES);
+        ;
 
-    public void setID(Integer ID) {
-        this.ID = ID;
     }
 
     public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
+    public boolean getDirectionType() {
+        return directionType;
     }
 
     public String getLeavingFrom() {
         return leavingFrom;
     }
 
-    public void setLeavingFrom(String leavingFrom) {
-        this.leavingFrom = leavingFrom;
-    }
-
     public String getArrivalTo() {
         return arrivalTo;
     }
 
-    public void setArrivalTo(String arrivalTo) {
-        this.arrivalTo = arrivalTo;
+    public LocalTime getLeavingTime() {
+        return LocalTime.from(leavingTime);
     }
 
-    public LocalDateTime getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(LocalDateTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public LocalDateTime getLeavingTime() {
-        return leavingTime;
-    }
-
-    public void setLeavingTime(LocalDateTime leavingTime) {
-        this.leavingTime = leavingTime;
-    }
-
-    public boolean getDirectionType() {
-        return directionType;
-    }
-
-    public void setDirectionType(boolean directionType) {
-        this.directionType = directionType;
-    }
-
-    public boolean isEmptyEntity() {
-        return flightNumber == null && leavingFrom == null && arrivalTo == null;
+    public LocalTime getArrivalTime() {
+        return LocalTime.from(arrivalTime);
     }
 
     @Override
     public String toString() {
         return
-                "\nID = " + ID +
-                        ", flightNumber = " + flightNumber +
+               /* "\nID = " + ID +*/
+                "\nflightNumber = " + flightNumber +
                         "\ndirectionType = " + directionType +
                         "\nleavingFrom = " + leavingFrom +
                         "\narrivalTo = " + arrivalTo +

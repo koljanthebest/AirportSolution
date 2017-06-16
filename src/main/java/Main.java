@@ -5,26 +5,25 @@ import util.DbConnector;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class Main {
     static FlightEntity SF_KV = new FlightEntity(
-            3,
             "SF-11-11-KV",
             FlightEntity.ARRIVAL,
             "San Francisco",
             "Kyiv",
-            LocalDateTime.now().plusHours(1),
-            LocalDateTime.now().plusDays(12));
+            LocalTime.now(),
+            LocalTime.now().plusHours(1));
 
     static FlightEntity KV_SF = new FlightEntity(
-            4,
             "KV-7777-SF",
             FlightEntity.LEAVING,
             "Kyiv",
             "San Francisco",
-            LocalDateTime.now().plusHours(6).plusMinutes(10),
-            LocalDateTime.now().plusDays(1));
+            LocalTime.now(),
+            LocalTime.now().plusHours(3));
 
 
     public static void main(String[] args) throws SQLException {
@@ -35,9 +34,9 @@ public class Main {
         FlightRepository flightRepository = new FlightRepository(connection);
 
 // CREATE>
-        flightRepository.add(new FlightEntity());
-        flightRepository.add(SF_KV);
-        flightRepository.add(KV_SF);
+//        flightRepository.add(new FlightEntity());
+//        flightRepository.add(SF_KV);
+//        flightRepository.add(KV_SF);
 
 // READ>
         List<FlightEntity> all = flightRepository.getAll();
