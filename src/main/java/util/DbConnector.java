@@ -1,12 +1,7 @@
 package util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class DbConnector {
@@ -23,7 +18,7 @@ public class DbConnector {
     public synchronized Connection getConnection() {
         if (this.connection != null) return this.connection;
         try {
-            getAndSetProperties(DB_CONFIG_PATH);
+            initProperties(DB_CONFIG_PATH);
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             return this.connection = DriverManager.getConnection(DB_TYPE + HOST + ":" + PORT + "/" + DB_NAME, LOGIN, PASSWORD);
         } catch (Exception e) {
@@ -32,7 +27,7 @@ public class DbConnector {
         }
     }
 
-    private void getAndSetProperties(String configPath) throws Exception {
+    private void initProperties(String configPath) throws Exception {
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream(configPath));
 

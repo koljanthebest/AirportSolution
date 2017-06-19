@@ -2,12 +2,8 @@ package entities;
 
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalAdjusters;
-import java.util.concurrent.TimeUnit;
 
-public class FlightEntity {  // POJO
-    // private Integer ID;
+public class FlightEntity {  // IMMUTABLE POJO
     final private String flightNumber;
     final private boolean directionType;
     final private String leavingFrom;
@@ -16,14 +12,13 @@ public class FlightEntity {  // POJO
     final private LocalTime arrivalTime;
     public static final boolean LEAVING = false, ARRIVAL = true;
 
-    public FlightEntity(/*Integer id,*/
-                        String flightNumber,
-                        boolean directionType,
-                        String leavingFrom,
-                        String arrivalTo,
-                        LocalTime arrivalTime,
-                        LocalTime leavingTime) {
-        //this.ID = id;
+    public FlightEntity(
+            String flightNumber,
+            boolean directionType,
+            String leavingFrom,
+            String arrivalTo,
+            LocalTime arrivalTime,
+            LocalTime leavingTime) {
         this.flightNumber = flightNumber;
         this.directionType = directionType;
 
@@ -32,8 +27,6 @@ public class FlightEntity {  // POJO
 
         this.arrivalTime = arrivalTime.truncatedTo(ChronoUnit.MINUTES);
         this.leavingTime = leavingTime.truncatedTo(ChronoUnit.MINUTES);
-        ;
-
     }
 
     public String getFlightNumber() {
@@ -62,14 +55,12 @@ public class FlightEntity {  // POJO
 
     @Override
     public String toString() {
-        return
-               /* "\nID = " + ID +*/
-                "\nflightNumber = " + flightNumber +
-                        "\ndirectionType = " + directionType +
-                        "\nleavingFrom = " + leavingFrom +
-                        "\narrivalTo = " + arrivalTo +
-                        "\nleavingTime = " + leavingTime +
-                        "\narrivalTime = " + arrivalTime +
-                        "\n";
+        return "\nflightNumber = " + flightNumber +
+                "\ndirectionType = " + directionType +
+                "\nleavingFrom = " + leavingFrom +
+                "\narrivalTo = " + arrivalTo +
+                "\nleavingTime = " + leavingTime +
+                "\narrivalTime = " + arrivalTime +
+                "\n";
     }
 }

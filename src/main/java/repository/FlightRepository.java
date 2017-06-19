@@ -16,6 +16,21 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
+    public FlightEntity get(String id) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT * FROM flight WHERE flight_number = ?;")) {
+
+            preparedStatement.setString(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return getFlightEntity(resultSet);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void add(FlightEntity flightEntity) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement(
@@ -34,54 +49,60 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void remove(FlightEntity entity) throws SQLException {
-
+    public void remove(String flightNumber) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "DELETE FROM flight WHERE flight_number = ?;");
-        preparedStatement.setString(1, entity.getFlightNumber());
+        preparedStatement.setString(1, flightNumber);
 
         preparedStatement.execute();
     }
 
     @Override
-    public void update(FlightEntity flightEntity) throws SQLException {
+    public void update(FlightEntity flightEntity) {
 
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "UPDATE flight SET direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE flight_number = ?;");
-        preparedStatement.setBoolean(1, flightEntity.getDirectionType());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "UPDATE flight SET direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE flight_number = ?;")) {
+            preparedStatement.setBoolean(1, flightEntity.getDirectionType());
 
-        preparedStatement.setString(2, flightEntity.getLeavingFrom());
-        preparedStatement.setString(3, flightEntity.getArrivalTo());
+            preparedStatement.setString(2, flightEntity.getLeavingFrom());
+            preparedStatement.setString(3, flightEntity.getArrivalTo());
 
-        preparedStatement.setTime(4, Time.valueOf(flightEntity.getLeavingTime().truncatedTo(ChronoUnit.MINUTES)));
-        preparedStatement.setTime(5, Time.valueOf(flightEntity.getArrivalTime().truncatedTo(ChronoUnit.MINUTES)));
+            preparedStatement.setTime(4, Time.valueOf(flightEntity.getLeavingTime().truncatedTo(ChronoUnit.MINUTES)));
+            preparedStatement.setTime(5, Time.valueOf(flightEntity.getArrivalTime().truncatedTo(ChronoUnit.MINUTES)));
 
-        preparedStatement.setString(6, flightEntity.getFlightNumber());
+            preparedStatement.setString(6, flightEntity.getFlightNumber());
 
-        preparedStatement.execute();
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<FlightEntity> getAll() {
         try (Statement statement = this.connection.createStatement();
+
              ResultSet resultSet = statement.executeQuery("SELECT * FROM flight;")) {
             List<FlightEntity> entitiesList = new ArrayList<>();
 
-            while (resultSet.next()) {
+            while (resultSet.next()) entitiesList.add(getFlightEntity(resultSet));
 
-                String flightNumber = resultSet.getString("flight_number");
-                boolean directionType = resultSet.getBoolean("direction_type");
-                String leavingFrom = resultSet.getString("leaving_from");
-                String arrivalTo = resultSet.getString("arrival_to");
-                LocalTime leavingTime = resultSet.getTime("leaving_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
-                LocalTime arrivalTime = resultSet.getTime("arrival_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
-
-                FlightEntity flightEntity = new FlightEntity(flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
-                entitiesList.add(flightEntity);
-            }
             return entitiesList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private FlightEntity getFlightEntity(ResultSet resultSet) throws SQLException {
+
+        String flightNumber = resultSet.getString("flight_number");
+        boolean directionType = resultSet.getBoolean("direction_type");
+        String leavingFrom = resultSet.getString("leaving_from");
+        String arrivalTo = resultSet.getString("arrival_to");
+        LocalTime leavingTime = resultSet.getTime("leaving_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
+        LocalTime arrivalTime = resultSet.getTime("arrival_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
+
+        return new FlightEntity(flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
     }
 }

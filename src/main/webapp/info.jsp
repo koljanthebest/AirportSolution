@@ -42,8 +42,8 @@
             <td><p><b>${flight.arrivalTo}</b></p></td>
             <td><p>${flight.arrivalTime}</p></td>
 
-            <td><a href="flight?action=update&id=${flight.flightNumber}">Update</a></td>
-            <td><a href="flight?action=delete&id=${flight.flightNumber}">Delete</a></td>
+            <td><a href="update?action=update&flightNumber=${flight.flightNumber}">Update</a></td>
+            <td><a href="info?action=delete&flightNumber=${flight.flightNumber}">Delete</a></td>
         </tr>
     </c:forEach>
 
