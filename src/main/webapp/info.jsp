@@ -15,31 +15,27 @@
             <%--left--%>
             <td width=50% style="background-color: aliceblue">
                 <p align="center">Type:</p>
-                <form>
-                    <input type="radio" name="typeFilter" value="ВСЁ"> ВСЁ <br>
-                    <input type="radio" name="typeFilter" value="ПРИЛЁТ"> ПРИЛЁТ <br>
-                    <input type="radio" name="typeFilter" value="ОТЛЁТ"> ОТЛЁТ
-                </form>
+                <input type="radio" name="typeFilter" value="all"> ВСЁ <br>
+                <input type="radio" name="typeFilter" value="true"> ПРИЛЁТ <br>
+                <input type="radio" name="typeFilter" value="false"> ОТЛЁТ
             </td>
             <%--right--%>
             <td width=50% style="background-color: azure">
                 <p align="center">Sort:</p>
-                <form>
-                    <input type="radio" name="sortFilter" value="LeavingTime"> Leaving time <br>
-                    <input type="radio" name="sortFilter" value="ArrivalTime"> Arrival time
-                </form>
+                <input type="radio" name="sortFilter" value="LeavingTime"> Leaving time <br>
+                <input type="radio" name="sortFilter" value="ArrivalTime"> Arrival time
             </td>
         <tr align="center">
             <%--s k i p--%>
             <td width=50% style="background-color: burlywood">
-                <button type="submit" name="action" value="filter-sort">
+                <button type="submit" name="action" value="skip">
                     skip all
                 </button>
             </td>
             <%--s u b m i t--%>
             <td width=50% style="background-color: lightgreen">
-                <button type="submit" name="action" value="skip">
-                    accept
+                <button type="submit" name="action" value="filter-sort">
+                    submit
                 </button>
             </td>
         </tr>
