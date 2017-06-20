@@ -4,14 +4,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface RepositoryInterface<T> {
-    T get(String id) throws SQLException;
+    T get(int id);
 
-    void add(T entity) throws SQLException;
+    void add(T entity);
 
-    void remove(String id) throws SQLException;
+    void remove(int id);
 
-    void update(T entity) throws SQLException;
+    void update(T entity);
 
-    List<T> getAll() throws SQLException;
+    List<T> getAll();
 
 }

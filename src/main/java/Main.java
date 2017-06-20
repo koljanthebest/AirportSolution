@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-public class Main {
+public class Main {/*
     static FlightEntity SF_KV = new FlightEntity(
             "SF-11-11-KV",
             FlightEntity.ARRIVAL,
@@ -25,7 +25,7 @@ public class Main {
             LocalTime.now(),
             LocalTime.now().plusHours(3));
 
-
+*/
     public static void main(String[] args) throws SQLException {
         DbConnector dbConnector = DbConnector.getINSTANCE();
         Connection connection = dbConnector.getConnection();

@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class FlightEntity {  // IMMUTABLE POJO
+    final private int id;
     final private String flightNumber;
     final private boolean directionType;
     final private String leavingFrom;
@@ -13,12 +14,14 @@ public class FlightEntity {  // IMMUTABLE POJO
     public static final boolean LEAVING = false, ARRIVAL = true;
 
     public FlightEntity(
+            int id,
             String flightNumber,
             boolean directionType,
             String leavingFrom,
             String arrivalTo,
             LocalTime arrivalTime,
             LocalTime leavingTime) {
+        this.id = id;
         this.flightNumber = flightNumber;
         this.directionType = directionType;
 
@@ -27,6 +30,10 @@ public class FlightEntity {  // IMMUTABLE POJO
 
         this.arrivalTime = arrivalTime.truncatedTo(ChronoUnit.MINUTES);
         this.leavingTime = leavingTime.truncatedTo(ChronoUnit.MINUTES);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFlightNumber() {
