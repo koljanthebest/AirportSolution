@@ -36,6 +36,13 @@
             <version>5.1.6</version>
         </dependency>
 
+        <!--HIBERNATE-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.3.8.Final</version>
+        </dependency>
+
         <!--SERVLET-->
         <dependency>
             <groupId>javax.servlet</groupId>
