@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.time.LocalTime;
 
-@WebServlet("/add")
+@WebServlet("/addNew")
 public class AddServlet extends HttpServlet {
     private DbConnector dbConnector;
     private Connection connection;
@@ -22,7 +22,7 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.getRequestDispatcher("/add.jsp").forward(request,response);
+        request.getRequestDispatcher("/addNew.jsp").forward(request,response);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class AddServlet extends HttpServlet {
 
         FlightEntity flightEntity = new FlightEntity(-1, flightNumber, directionType, leavingFrom, arrivalTo, arrivalTime, leavingTime);
         System.out.println(flightEntity);
-        repository.add(flightEntity);
+        repository.addNew(flightEntity);
         response.sendRedirect("http://localhost:8080/info");
     }
 
     @Override
     public void init() throws ServletException {
-        System.out.println("init/add");
+        System.out.println("init/addNew");
         if (dbConnector != null) return;
         dbConnector = DbConnector.getINSTANCE();
         connection = dbConnector.getConnection();

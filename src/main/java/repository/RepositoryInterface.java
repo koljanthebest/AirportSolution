@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface RepositoryInterface<T> {
-    T get(int id);
+    T getByID(int id);
 
-    void add(T entity);
+    void addNew(T entity);
 
     void remove(int id);
 

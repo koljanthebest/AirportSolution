@@ -34,9 +34,9 @@ public class Main {/*
         FlightRepository flightRepository = new FlightRepository(connection);
 
 // CREATE>
-//        flightRepository.add(new FlightEntity());
-//        flightRepository.add(SF_KV);
-//        flightRepository.add(KV_SF);
+//        flightRepository.addNew(new FlightEntity());
+//        flightRepository.addNew(SF_KV);
+//        flightRepository.addNew(KV_SF);
 
 // READ>
         List<FlightEntity> all = flightRepository.getAll();

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 @WebServlet("/update")
 public class UpdateServlet extends HttpServlet {
@@ -29,7 +28,7 @@ public class UpdateServlet extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
 
-        FlightEntity flightEntity = repository.get(id);
+        FlightEntity flightEntity = repository.getByID(id);
         request.setAttribute("item", flightEntity);
         request.getRequestDispatcher("update.jsp").forward(request, response);
     }

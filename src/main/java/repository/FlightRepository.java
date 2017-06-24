@@ -19,7 +19,7 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public FlightEntity get(int id) {
+    public FlightEntity getByID(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "SELECT * FROM flight WHERE id = ?;")) {
 
@@ -35,7 +35,7 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void add(FlightEntity flightEntity) {
+    public void addNew(FlightEntity flightEntity) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO flight (flight_number, direction_type, leaving_from, arrival_to, leaving_time, arrival_time) VALUES(?, ?, ?, ?, ?, ?);")) {
