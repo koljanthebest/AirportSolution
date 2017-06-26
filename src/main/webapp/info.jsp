@@ -69,12 +69,12 @@
     </thead>
     <%------------------------------------<<    R O W    >>-------------------------------------------------%>
     <c:forEach var="flight" items="${list}">
-        <jsp:useBean id="flight" scope="page" type="entities.FlightEntity"/>
+        <jsp:useBean id="flight" scope="page" type="entities.FlightHib"/>
 
-        <tr align="center" style="background-color:${flight.directionType ? '#dcdcdc' : ''}">
+        <tr align="center" style="background-color:${flight.directionType == 1 ? '#dcdcdc' : ''}">
             <td><p>${flight.flightNumber}</p></td>
             <td>
-                <p style="color:${flight.directionType ? 'green' : 'red'}"> ${flight.directionType ? 'ПРИЛЁТ': 'ОТЛЁТ'}</p>
+                <p style="color:${flight.directionType == 1 ? 'green' : 'red'}"> ${flight.directionType == 1 ? 'ПРИЛЁТ': 'ОТЛЁТ'}</p>
             </td>
 
             <td><p><b>${flight.leavingFrom}</b></p></td>

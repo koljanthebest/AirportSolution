@@ -1,12 +1,28 @@
 package util;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 public class SessionFactoryUtil {
     private static SessionFactory sessionFactory;
+
+    @FunctionalInterface
+    public interface Executor<T> {
+        T execute(Session session);
+    }
+
+    public static <T> T transaction(Executor<T> executor) {
+        Session session = getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            return executor.execute(session);
+        } finally {
+            transaction.commit();
+            session.close();
+        }
+    }
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null)
@@ -15,6 +31,8 @@ public class SessionFactoryUtil {
     }
 
     public static void shutdown() {
-        getSessionFactory().close(); // Чистит кеш и закрывает соединение с БД
+        sessionFactory.close(); // Чистит кеш и закрывает соединение с БД
+        sessionFactory = null;
     }
+
 }

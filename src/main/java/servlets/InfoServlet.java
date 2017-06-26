@@ -1,7 +1,9 @@
 package servlets;
 
 import entities.FlightEntity;
+import entities.FlightHib;
 import repository.FlightRepository;
+import repository.FlightRepositoryHib;
 import util.DbConnector;
 
 import javax.servlet.ServletException;
@@ -17,9 +19,7 @@ import java.util.stream.Collectors;
 
 @WebServlet("/info")
 public class InfoServlet extends HttpServlet {
-    private DbConnector dbConnector;
-    private Connection connection;
-    private FlightRepository repository;
+    private FlightRepositoryHib repository = new FlightRepositoryHib();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +28,7 @@ public class InfoServlet extends HttpServlet {
 
 
         if (request.getParameter("action") != null) delete(request);
-        List<FlightEntity> flightList = repository.getAll();
+        List<FlightHib> flightList = repository.getAll();
 
         request.setAttribute("list", flightList);
         request.getRequestDispatcher("info.jsp").forward(request, response);
@@ -44,18 +44,19 @@ public class InfoServlet extends HttpServlet {
     }
 
     private void filterSort(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<FlightEntity> flightList = repository.getAll();
+        List<FlightHib> flightList = repository.getAll();
 
         String typeFilter = request.getParameter("typeFilter"); // FILTER
         String sortFilter = request.getParameter("sortFilter"); // SORT
 
 //filter>
-        if (typeFilter != null && !typeFilter.equals("all"))
+        if (typeFilter != null && !typeFilter.equals("all")) {
+            final byte type = (byte) (Boolean.parseBoolean(typeFilter) ? 1 : 0);
             flightList = flightList.stream()
-                    .filter(e -> e.getDirectionType() == Boolean.parseBoolean(typeFilter))
+                    .filter(e -> e.getDirectionType() == type)
                     .sorted(Boolean.parseBoolean(typeFilter) ? sortByArrival : sortByLeaving)
                     .collect(Collectors.toList());
-
+        }
 //sort>
         if (sortFilter != null && sortFilter.equals("LeavingTime"))
             flightList.sort(sortByLeaving);
@@ -72,24 +73,14 @@ public class InfoServlet extends HttpServlet {
         repository.remove(id);
     }
 
-
-    public InfoServlet() throws ServletException {
-        System.out.println("init/info");
-        if (dbConnector == null) {
-            dbConnector = DbConnector.getINSTANCE();
-            connection = dbConnector.getConnection();
-            repository = new FlightRepository(connection);
-        }
-    }
-
-    Comparator<FlightEntity> sortByArrival = (entity1, entity2) -> {
-        if (entity1.getArrivalTime().isBefore(entity2.getArrivalTime())) return -1;
-        if (entity1.getArrivalTime().isAfter(entity2.getArrivalTime())) return 1;
+    Comparator<FlightHib> sortByArrival = (entity1, entity2) -> {
+        if (entity1.getArrivalTime().toLocalDateTime().isBefore(entity2.getArrivalTime().toLocalDateTime())) return -1;
+        if (entity1.getArrivalTime().toLocalDateTime().isAfter(entity2.getArrivalTime().toLocalDateTime())) return 1;
         return 0;
     };
-    Comparator<FlightEntity> sortByLeaving = (entity1, entity2) -> {
-        if (entity1.getLeavingTime().isBefore(entity2.getLeavingTime())) return -1;
-        if (entity1.getLeavingTime().isAfter(entity2.getLeavingTime())) return 1;
+    Comparator<FlightHib> sortByLeaving = (entity1, entity2) -> {
+        if (entity1.getLeavingTime().toLocalDateTime().isBefore(entity2.getLeavingTime().toLocalDateTime())) return -1;
+        if (entity1.getLeavingTime().toLocalDateTime().isAfter(entity2.getLeavingTime().toLocalDateTime())) return 1;
         return 0;
     };
 }
