@@ -1,9 +1,7 @@
 package repository;
 
-import entities.FlightEntity;
+import entities.FlightJDBC;
 
-import java.io.IOError;
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,15 +9,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlightRepository implements RepositoryInterface<FlightEntity> {
+public class FlightRepositoryJDBC implements RepositoryInterface<FlightJDBC> {
     private Connection connection;
 
-    public FlightRepository(Connection connection) {
+    public FlightRepositoryJDBC(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public FlightEntity getByID(int id) {
+    public FlightJDBC getByID(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "SELECT * FROM flight WHERE id = ?;")) {
 
@@ -35,21 +33,21 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void addNew(FlightEntity flightEntity) {
+    public void addNewEntity(FlightJDBC flightJDBC) {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO flight (flight_number, direction_type, leaving_from, arrival_to, leaving_time, arrival_time) VALUES(?, ?, ?, ?, ?, ?);")) {
 
 
-            preparedStatement.setString(1, flightEntity.getFlightNumber());
-            preparedStatement.setBoolean(2, flightEntity.getDirectionType());
+            preparedStatement.setString(1, flightJDBC.getFlightNumber());
+            preparedStatement.setBoolean(2, flightJDBC.getDirectionType());
 
-            preparedStatement.setString(3, flightEntity.getLeavingFrom());
-            preparedStatement.setString(4, flightEntity.getArrivalTo());
+            preparedStatement.setString(3, flightJDBC.getLeavingFrom());
+            preparedStatement.setString(4, flightJDBC.getArrivalTo());
 
             LocalDateTime now = LocalDateTime.now();
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(now.with(flightEntity.getLeavingTime())));
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(now.with(flightEntity.getArrivalTime())));
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(now.with(flightJDBC.getLeavingTime())));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(now.with(flightJDBC.getArrivalTime())));
 
             preparedStatement.execute();
         } catch (Exception e) {
@@ -59,7 +57,7 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void remove(int id) {
+    public void removeById(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "DELETE FROM flight WHERE id = ?;")) {
             preparedStatement.setInt(1, id);
@@ -72,22 +70,22 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public void update(FlightEntity flightEntity) {
-        System.out.println(flightEntity);
+    public void updateEntity(FlightJDBC flightJDBC) {
+        System.out.println(flightJDBC);
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "UPDATE flight SET flight_number = ?, direction_type = ?, leaving_from = ?, arrival_to = ?, leaving_time = ?, arrival_time = ? WHERE id = ?;")) {
 
-            preparedStatement.setString(1, flightEntity.getFlightNumber());
-            preparedStatement.setBoolean(2, flightEntity.getDirectionType());
+            preparedStatement.setString(1, flightJDBC.getFlightNumber());
+            preparedStatement.setBoolean(2, flightJDBC.getDirectionType());
 
-            preparedStatement.setString(3, flightEntity.getLeavingFrom());
-            preparedStatement.setString(4, flightEntity.getArrivalTo());
+            preparedStatement.setString(3, flightJDBC.getLeavingFrom());
+            preparedStatement.setString(4, flightJDBC.getArrivalTo());
 
             LocalDateTime now = LocalDateTime.now();
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(now.with(flightEntity.getLeavingTime())));
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(now.with(flightEntity.getArrivalTime())));
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(now.with(flightJDBC.getLeavingTime())));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(now.with(flightJDBC.getArrivalTime())));
 
-            preparedStatement.setInt(7, flightEntity.getId());
+            preparedStatement.setInt(7, flightJDBC.getId());
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -97,11 +95,11 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
     }
 
     @Override
-    public List<FlightEntity> getAll() {
+    public List<FlightJDBC> getAll() {
         try (Statement statement = this.connection.createStatement();
 
              ResultSet resultSet = statement.executeQuery("SELECT * FROM flight;")) {
-            List<FlightEntity> entitiesList = new ArrayList<>();
+            List<FlightJDBC> entitiesList = new ArrayList<>();
 
             while (resultSet.next()) entitiesList.add(getFlightEntity(resultSet));
 
@@ -112,7 +110,7 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
         }
     }
 
-    private FlightEntity getFlightEntity(ResultSet resultSet) throws SQLException {
+    private FlightJDBC getFlightEntity(ResultSet resultSet) throws SQLException {
 
         int id = resultSet.getInt("id");
         String flightNumber = resultSet.getString("flight_number");
@@ -122,6 +120,6 @@ public class FlightRepository implements RepositoryInterface<FlightEntity> {
         LocalTime leavingTime = resultSet.getTime("leaving_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
         LocalTime arrivalTime = resultSet.getTime("arrival_time").toLocalTime().truncatedTo(ChronoUnit.MINUTES);
 
-        return new FlightEntity(id, flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
+        return new FlightJDBC(id, flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
     }
 }

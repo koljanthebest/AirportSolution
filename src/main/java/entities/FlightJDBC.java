@@ -3,7 +3,7 @@ package entities;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-public class FlightEntity {  // IMMUTABLE POJO
+public class FlightJDBC {  // IMMUTABLE POJO
     final private int id;
     final private String flightNumber;
     final private boolean directionType;
@@ -13,7 +13,7 @@ public class FlightEntity {  // IMMUTABLE POJO
     final private LocalTime arrivalTime;
     public static final boolean LEAVING = false, ARRIVAL = true;
 
-    public FlightEntity(
+    public FlightJDBC(
             int id,
             String flightNumber,
             boolean directionType,
@@ -28,8 +28,8 @@ public class FlightEntity {  // IMMUTABLE POJO
         this.leavingFrom = leavingFrom;
         this.arrivalTo = arrivalTo;
 
-        this.arrivalTime = arrivalTime.truncatedTo(ChronoUnit.MINUTES);
         this.leavingTime = leavingTime.truncatedTo(ChronoUnit.MINUTES);
+        this.arrivalTime = arrivalTime.truncatedTo(ChronoUnit.MINUTES);
     }
 
     public int getId() {

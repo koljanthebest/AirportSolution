@@ -1,10 +1,8 @@
 package servlets;
 
-import entities.FlightEntity;
 import entities.FlightHib;
-import repository.FlightRepository;
+import entities.FlightJDBC;
 import repository.FlightRepositoryHib;
-import util.DbConnector;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,10 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static util.EntityUtil.toJDBCEntityList;
 
 @WebServlet("/info")
 public class InfoServlet extends HttpServlet {
@@ -28,7 +27,7 @@ public class InfoServlet extends HttpServlet {
 
 
         if (request.getParameter("action") != null) delete(request);
-        List<FlightHib> flightList = repository.getAll();
+        List<FlightJDBC> flightList = toJDBCEntityList(repository.getAll());
 
         request.setAttribute("list", flightList);
         request.getRequestDispatcher("info.jsp").forward(request, response);
@@ -39,22 +38,22 @@ public class InfoServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         System.out.println("'/info'  ->  'DO POST' method:");
 
-        if (request.getParameter("action").equals("skip")) doGet(request, response);
+        if (request.getParameter("action").equals("skip")) response.sendRedirect("http://localhost:8080/info");
         if (request.getParameter("action").equals("filter-sort")) filterSort(request, response);
     }
 
     private void filterSort(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<FlightHib> flightList = repository.getAll();
+        List<FlightJDBC> flightList = toJDBCEntityList(repository.getAll());
 
         String typeFilter = request.getParameter("typeFilter"); // FILTER
         String sortFilter = request.getParameter("sortFilter"); // SORT
 
 //filter>
         if (typeFilter != null && !typeFilter.equals("all")) {
-            final byte type = (byte) (Boolean.parseBoolean(typeFilter) ? 1 : 0);
+            boolean typeFilterBoolean = Boolean.parseBoolean(typeFilter);
             flightList = flightList.stream()
-                    .filter(e -> e.getDirectionType() == type)
-                    .sorted(Boolean.parseBoolean(typeFilter) ? sortByArrival : sortByLeaving)
+                    .filter(e -> e.getDirectionType() == typeFilterBoolean)
+                    .sorted(typeFilterBoolean ? sortByArrival : sortByLeaving)
                     .collect(Collectors.toList());
         }
 //sort>
@@ -70,17 +69,17 @@ public class InfoServlet extends HttpServlet {
     private void delete(HttpServletRequest request) {
         if (!request.getParameter("action").equals("delete")) return;
         int id = Integer.parseInt(request.getParameter("id"));
-        repository.remove(id);
+        repository.removeById(id);
     }
 
-    Comparator<FlightHib> sortByArrival = (entity1, entity2) -> {
-        if (entity1.getArrivalTime().toLocalDateTime().isBefore(entity2.getArrivalTime().toLocalDateTime())) return -1;
-        if (entity1.getArrivalTime().toLocalDateTime().isAfter(entity2.getArrivalTime().toLocalDateTime())) return 1;
+    private Comparator<FlightJDBC> sortByArrival = (entity1, entity2) -> {
+        if (entity1.getArrivalTime().isBefore(entity2.getArrivalTime())) return -1;
+        if (entity1.getArrivalTime().isAfter(entity2.getArrivalTime())) return 1;
         return 0;
     };
-    Comparator<FlightHib> sortByLeaving = (entity1, entity2) -> {
-        if (entity1.getLeavingTime().toLocalDateTime().isBefore(entity2.getLeavingTime().toLocalDateTime())) return -1;
-        if (entity1.getLeavingTime().toLocalDateTime().isAfter(entity2.getLeavingTime().toLocalDateTime())) return 1;
+    private Comparator<FlightJDBC> sortByLeaving = (entity1, entity2) -> {
+        if (entity1.getLeavingTime().isBefore(entity2.getLeavingTime())) return -1;
+        if (entity1.getLeavingTime().isAfter(entity2.getLeavingTime())) return 1;
         return 0;
     };
 }

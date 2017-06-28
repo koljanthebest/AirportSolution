@@ -10,16 +10,16 @@ public class FlightRepositoryHib implements RepositoryInterface<FlightHib> {
 
     @Override
     public FlightHib getByID(final int id) {
-        return (FlightHib) SessionFactoryUtil.transaction( (Session session) -> session.get(FlightHib.class, id));
+        return (FlightHib) SessionFactoryUtil.transaction((Session session) -> session.get(FlightHib.class, id));
     }
 
     @Override
-    public void addNew(final FlightHib entity) {
-        SessionFactoryUtil.transaction( (Session session) -> session.save(entity));
+    public void addNewEntity(final FlightHib entity) {
+        SessionFactoryUtil.transaction((Session session) -> session.save(entity));
     }
 
     @Override
-    public void remove(final int id) {
+    public void removeById(final int id) {
         SessionFactoryUtil.transaction((Session session) -> {
             session.delete(getByID(id));
             return null;
@@ -27,7 +27,7 @@ public class FlightRepositoryHib implements RepositoryInterface<FlightHib> {
     }
 
     @Override
-    public void update(final FlightHib entity) {
+    public void updateEntity(final FlightHib entity) {
         SessionFactoryUtil.transaction((Session session) -> {
             session.update(entity);
             return null;

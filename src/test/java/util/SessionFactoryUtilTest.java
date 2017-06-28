@@ -33,7 +33,7 @@ public class SessionFactoryUtilTest {
         List<FlightHib> list = session.createQuery("from FlightHib").list();
         list.forEach(System.out::println);
 
-        // update>>
+        // updateEntity>>
 
         //delete>>
     }

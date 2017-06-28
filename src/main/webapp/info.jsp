@@ -1,4 +1,4 @@
-<%@ page import="entities.FlightEntity" %>
+<%@ page import="entities.FlightJDBC" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -69,12 +69,12 @@
     </thead>
     <%------------------------------------<<    R O W    >>-------------------------------------------------%>
     <c:forEach var="flight" items="${list}">
-        <jsp:useBean id="flight" scope="page" type="entities.FlightHib"/>
+        <jsp:useBean id="flight" scope="page" type="entities.FlightJDBC"/>
 
-        <tr align="center" style="background-color:${flight.directionType == 1 ? '#dcdcdc' : ''}">
+        <tr align="center" style="background-color:${flight.directionType ? '#dcdcdc' : ''}">
             <td><p>${flight.flightNumber}</p></td>
             <td>
-                <p style="color:${flight.directionType == 1 ? 'green' : 'red'}"> ${flight.directionType == 1 ? 'ПРИЛЁТ': 'ОТЛЁТ'}</p>
+                <p style="color:${flight.directionType ? 'green' : 'red'}"> ${flight.directionType? 'ПРИЛЁТ': 'ОТЛЁТ'}</p>
             </td>
 
             <td><p><b>${flight.leavingFrom}</b></p></td>

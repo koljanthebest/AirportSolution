@@ -24,12 +24,12 @@
         </thead>
         <%------------------------------------<<    R O W    >>-------------------------------------------------%>
         <tr item="${item}" var="item">
-            <%--<jsp:useBean id="item" scope="page" type="entities.FlightEntity"/>--%>
+            <%--<jsp:useBean id="item" scope="page" type="entities.FlightJDBC>--%>
             <input type="hidden" name="id" value="${item.id}">
             <td><input type="text" name="flightNumber" value="${item.flightNumber}"></td>
 
             <td style="color:${item.directionType ? 'green' : 'red'}">
-                <select name="type" value="${item.directionType? 'ПРИЛЁТ': 'ОТЛЁТ'}">
+                <select name="type" value="${item.directionType ? 'ПРИЛЁТ': 'ОТЛЁТ'}">
                     <option value="true">ПРИЛЁТ</option>
                     <option value="false">ОТЛЁТ</option>
                 </select>

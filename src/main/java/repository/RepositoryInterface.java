@@ -5,11 +5,11 @@ import java.util.List;
 public interface RepositoryInterface<T> {
     T getByID(int id);
 
-    void addNew(T entity);
+    void addNewEntity(T entity);
 
-    void remove(int id);
+    void removeById(int id);
 
-    void update(T entity);
+    void updateEntity(T entity);
 
     List<T> getAll();
 

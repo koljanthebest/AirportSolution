@@ -1,25 +1,23 @@
-import entities.FlightEntity;
-import repository.FlightRepository;
+import entities.FlightJDBC;
+import repository.FlightRepositoryJDBC;
 import util.DbConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public class Main {/*
-    static FlightEntity SF_KV = new FlightEntity(
+    static FlightJDBC SF_KV = new FlightJDBC(
             "SF-11-11-KV",
-            FlightEntity.ARRIVAL,
+            FlightJDBC.ARRIVAL,
             "San Francisco",
             "Kyiv",
             LocalTime.now(),
             LocalTime.now().plusHours(1));
 
-    static FlightEntity KV_SF = new FlightEntity(
+    static FlightJDBC KV_SF = new FlightJDBC(
             "KV-7777-SF",
-            FlightEntity.LEAVING,
+            FlightJDBC.LEAVING,
             "Kyiv",
             "San Francisco",
             LocalTime.now(),
@@ -31,24 +29,24 @@ public class Main {/*
         Connection connection = dbConnector.getConnection();
         System.out.println(connection == null ? "NO CONNECTION !" : "CONNECTION SUCCESS !\n");
 
-        FlightRepository flightRepository = new FlightRepository(connection);
+        FlightRepositoryJDBC flightRepositoryJDBC = new FlightRepositoryJDBC(connection);
 
 // CREATE>
-//        flightRepository.addNew(new FlightEntity());
-//        flightRepository.addNew(SF_KV);
-//        flightRepository.addNew(KV_SF);
+//        flightRepositoryJDBC.addNewEntity(new FlightJDBC());
+//        flightRepositoryJDBC.addNewEntity(SF_KV);
+//        flightRepositoryJDBC.addNewEntity(KV_SF);
 
 // READ>
-        List<FlightEntity> all = flightRepository.getAll();
+        List<FlightJDBC> all = flightRepositoryJDBC.getAll();
         all.forEach(System.out::println);
 
 // UPDATE>
         // SF_KV.setLeavingFrom("Lviv");
         // SF_KV.setArrivalTo("Ierusalem");
-        // flightRepository.update(SF_KV);
+        // flightRepositoryJDBC.updateEntity(SF_KV);
 
 // DELETE>
-        //flightRepository.remove(1);
+        //flightRepositoryJDBC.removeById(1);
 
         System.out.println("\t ALL  SUCCESSFUL !");
     }

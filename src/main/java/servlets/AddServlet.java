@@ -1,8 +1,8 @@
 package servlets;
 
-import entities.FlightEntity;
-import repository.FlightRepository;
-import util.DbConnector;
+import entities.FlightHib;
+import repository.FlightRepositoryHib;
+import util.TimeUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,43 +10,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.time.LocalTime;
-
-@WebServlet("/addNew")
+import java.sql.Timestamp;
+@WebServlet("/add")
 public class AddServlet extends HttpServlet {
-    private DbConnector dbConnector;
-    private Connection connection;
-    private FlightRepository repository;
+    private FlightRepositoryHib repository = new FlightRepositoryHib();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        request.getRequestDispatcher("/addNew.jsp").forward(request,response);
+        request.getRequestDispatcher("/add.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String flightNumber = request.getParameter("flightNumber");
-        boolean directionType = Boolean.parseBoolean(request.getParameter("type"));
+        Byte directionType = Byte.parseByte(request.getParameter("type"));
         String leavingFrom = request.getParameter("leavingFrom");
         String arrivalTo = request.getParameter("arrivalTo");
-        LocalTime leavingTime = LocalTime.parse(request.getParameter("leavingTime"));
-        LocalTime arrivalTime = LocalTime.parse(request.getParameter("arrivalTime"));
+        String leavingTimeString = request.getParameter("leavingTime");
+        String arrivalTimeString = request.getParameter("arrivalTime");
 
-        FlightEntity flightEntity = new FlightEntity(-1, flightNumber, directionType, leavingFrom, arrivalTo, arrivalTime, leavingTime);
-        System.out.println(flightEntity);
-        repository.addNew(flightEntity);
+        Timestamp leavingTimeStamp = TimeUtils.toTimeStamp(leavingTimeString);
+        Timestamp arrivalTimeStamp = TimeUtils.toTimeStamp(arrivalTimeString);
+        FlightHib flight = new FlightHib(flightNumber, directionType, leavingFrom, arrivalTo, leavingTimeStamp, arrivalTimeStamp);
+        System.out.println(flight);
+        repository.addNewEntity(flight);
         response.sendRedirect("http://localhost:8080/info");
-    }
-
-    @Override
-    public void init() throws ServletException {
-        System.out.println("init/addNew");
-        if (dbConnector != null) return;
-        dbConnector = DbConnector.getINSTANCE();
-        connection = dbConnector.getConnection();
-        repository = new FlightRepository(connection);
     }
 }

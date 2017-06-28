@@ -27,8 +27,8 @@
 
             <td>
                 <select name="type">
-                    <option value="true">ПРИЛЁТ</option>
-                    <option value="false">ОТЛЁТ</option>
+                    <option value="1">ПРИЛЁТ</option>
+                    <option value="0">ОТЛЁТ</option>
                 </select>
             </td>
 

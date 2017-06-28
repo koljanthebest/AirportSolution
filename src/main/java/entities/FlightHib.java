@@ -1,7 +1,6 @@
 package entities;
 
 import javax.persistence.*;
-import javax.print.attribute.standard.Finishings;
 import java.sql.Timestamp;
 
 @Entity
@@ -15,6 +14,23 @@ public class FlightHib {
     private Timestamp leavingTime;
     private Timestamp arrivalTime;
     public static final byte LEAVING = 1, ARRIVAL = 0;
+
+    public FlightHib() {
+    }
+
+    public FlightHib(String flightNumber, byte directionType, String leavingFrom, String arrivalTo, Timestamp leavingTime, Timestamp arrivalTime) {
+        this.flightNumber = flightNumber;
+        this.directionType = directionType;
+        this.leavingFrom = leavingFrom;
+        this.arrivalTo = arrivalTo;
+        this.leavingTime = leavingTime;
+        this.arrivalTime = arrivalTime;
+    }
+
+    public FlightHib(int id, String flightNumber, byte directionType, String leavingFrom, String arrivalTo, Timestamp leavingTime, Timestamp arrivalTime) {
+        this(flightNumber, directionType, leavingFrom, arrivalTo, leavingTime, arrivalTime);
+        this.id = id;
+    }
 
     @Id
     @Column(name = "id")

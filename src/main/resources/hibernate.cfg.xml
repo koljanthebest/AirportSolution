@@ -12,9 +12,9 @@
 
         <!--<property name="show_sql">true</property>-->
 
-        <!--<mapping resource="entities/FlightHib.hbm.xml"/>-->
+        <!--<mapping resource="entitFlightEntityHibtHib.hbm.xml"/>-->
         <mapping class="entities.FlightHib"/>
 
-        <!-- <property name="hbm2ddl.auto">update</property> -->
+        <!-- <property name="hbm2ddl.auupdateEntitydate</property> -->
     </session-factory>
 </hibernate-configuration>
